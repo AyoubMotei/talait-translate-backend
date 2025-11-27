@@ -1,0 +1,7 @@
+#Envirenement de Travail
+venv/
+#Fochier sensibles 
+.env
+# Fichiers Python à ignorer
+__pycache__/
+*.pyc
