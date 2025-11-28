@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import engine, Base, get_db 
 from app.schemas import UserCreate, UserResponse, Token, TranslateRequest, TranslateResponse
@@ -17,7 +17,7 @@ app = FastAPI(title="TalAIt Secure Translate API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,10 +64,10 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
 
     return {"access_token": token, "token_type": "bearer"}
 
-@app.post("/translate", response_model=TranslateResponse)
+@app.post("/translate")
 def translate(
     request: TranslateRequest, 
-    current_user: User = Depends(get_current_user) 
+    current_user: User = Depends(get_current_user)
 ):
     # Construction de la direction (ex: "fr-en") à partir du schéma
     direction = f"{request.source_language}-{request.target_language}"

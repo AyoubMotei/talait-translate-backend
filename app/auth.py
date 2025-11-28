@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta
-from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 import os
 from dotenv import load_dotenv
@@ -43,7 +41,7 @@ def verify_token(token):
     except JWTError:
         raise HTTPException(status_code=401, detail="Token invalide ou expiré")
 
-def get_current_user(token, db: Session = Depends(get_db)):
+def get_current_user(token: str = Header(), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Impossible de valider les identifiants",
